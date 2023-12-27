@@ -39,27 +39,26 @@ class _MapScreenState extends State<MapScreen> {
     // Itera sobre cada feature y crea el polígono correspondiente
     features.forEach((feature) {
       // Obtén las coordenadas del polígono
-      List<List<LatLng>> coordinates = [];
+      List<LatLng> polygonLatLng = [];
       List<dynamic> polygonCoordinates = feature['geometry']['coordinates'][0];
       for (var coordinate in polygonCoordinates) {
-        List<LatLng> polygonLatLng = [];
-
         polygonLatLng.add(LatLng(coordinate[1], coordinate[0]));
-        coordinates.add(polygonLatLng);
       }
 
       // Crea el polígono
       Polygon polygon = Polygon(
         polygonId: PolygonId(feature['properties']['nro']),
-        points: coordinates[0],
+        points: polygonLatLng,
         strokeWidth: 2,
         strokeColor: Colors.blue,
-        fillColor: Colors.transparent,
+        fillColor: Colors.yellow,
       );
       setState(() {
         polygons.add(polygon);
       });
     });
+
+    print(this.polygons);
   }
 
   Future<List<JsonModel>> cargarDatosDesdeJson() async {
