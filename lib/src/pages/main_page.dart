@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sist/src/classes/catalogo_classes.dart';
 import 'package:sist/src/classes/negocio_classes.dart';
 import 'package:sist/src/classes/producto_classes.dart';
@@ -20,7 +21,10 @@ class _MainPageState extends State<MainPage> {
   List<Catalogo> catalogoElements = [];
   List<Producto> productoElements = [];
   List<Negocio> negocioElements = [];
-  MapScreen myMap = MapScreen();
+  final MapScreenController mapScreenController = MapScreenController();
+  final MapLocationController mapLocationController = MapLocationController();
+  final MapLocationNevalController mapLocationNevalController =
+      MapLocationNevalController();
 
   @override
   void initState() {
@@ -32,6 +36,7 @@ class _MainPageState extends State<MainPage> {
     _loadCatalogo();
     _loadDatosTienda();
     _loadProducto();
+    _loadGeoJson();
   }
 
   _loadProducto() async {
@@ -73,6 +78,43 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  _loadGeoJson() async {
+    Set<Polygon> polygons = {};
+    // Lee el archivo GeoJSON desde tus activos
+    String geoJsonString = await DefaultAssetBundle.of(context)
+        .loadString('assets/tiendas.geojson');
+
+    // Decodifica el GeoJSON
+    Map<String, dynamic> geoJson = json.decode(geoJsonString);
+
+    // Obtén las features del GeoJSON
+    List<dynamic> features = geoJson['features'];
+
+    // Itera sobre cada feature y crea el polígono correspondiente
+    features.forEach((feature) {
+      // Obtén las coordenadas del polígono
+      List<LatLng> polygonLatLng = [];
+      List<dynamic> polygonCoordinates = feature['geometry']['coordinates'][0];
+      for (var coordinate in polygonCoordinates) {
+        polygonLatLng.add(LatLng(coordinate[1], coordinate[0]));
+      }
+
+      // Crea el polígono
+      Polygon polygon = Polygon(
+        polygonId: PolygonId(feature['properties']['nro']),
+        points: polygonLatLng,
+        strokeWidth: 2,
+        strokeColor: Colors.blue,
+        fillColor: Colors.yellow,
+      );
+      setState(() {
+        polygons.add(polygon);
+      });
+    });
+
+    mapScreenController.chargePolygons(polygons);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +141,13 @@ class _MainPageState extends State<MainPage> {
                         ],
                       ))),
               Expanded(
-                child: Container(alignment: Alignment.center, child: myMap),
+                child: Container(
+                    alignment: Alignment.center,
+                    child: MapScreen(
+                      controller: mapScreenController,
+                      locationController: mapLocationController,
+                      locationNevalController: mapLocationNevalController,
+                    )),
               ),
               Container(
                 alignment: Alignment.topRight,
@@ -115,7 +163,7 @@ class _MainPageState extends State<MainPage> {
                                     negocioElements,
                                     productoElements,
                                     "Buscar por catalogo",
-                                    myMap,
+                                    mapScreenController,
                                     0));
                           },
                           icon: const Icon(
@@ -133,7 +181,7 @@ class _MainPageState extends State<MainPage> {
                                     catalogoElements,
                                     productoElements,
                                     "Buscar por tienda",
-                                    myMap,
+                                    mapScreenController,
                                     1));
                           },
                           icon: const Icon(
@@ -143,7 +191,9 @@ class _MainPageState extends State<MainPage> {
                     ),
                     Card(
                       child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            mapLocationController.getMyLocation();
+                          },
                           icon: const Icon(
                             Icons.accessibility_new_rounded,
                             size: 50.0,
@@ -159,7 +209,9 @@ class _MainPageState extends State<MainPage> {
                     ),
                     Card(
                       child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            mapLocationNevalController.getMyLocation();
+                          },
                           icon: const Icon(
                             Icons.add_location_alt,
                             size: 50.0,
