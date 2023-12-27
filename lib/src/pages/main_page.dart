@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'map_widget.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -25,7 +26,8 @@ class _MainPageState extends State<MainPage> {
             children: [
               Card(
                   child: Container(
-                    padding: EdgeInsets.only( left: 3.0, right: 8.0, top: 3.0, bottom: 10.0),
+                padding: const EdgeInsets.only(
+                    left: 3.0, right: 8.0, top: 3.0, bottom: 10.0),
                 child: TextField(
                   controller: searchButton,
                   decoration: const InputDecoration(
@@ -35,9 +37,7 @@ class _MainPageState extends State<MainPage> {
               )),
               Expanded(
                 child: Container(
-                  alignment: Alignment.center,
-                  child: const Text('AQUI VIENE EL MAPA'),
-                ),
+                    alignment: Alignment.center, child: const MapScreen()),
               ),
               Container(
                 alignment: Alignment.topRight,
