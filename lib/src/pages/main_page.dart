@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:sist/src/classes/catalogo_classes.dart';
+import 'package:sist/src/classes/negocio_classes.dart';
+import 'package:sist/src/classes/producto_classes.dart';
 import 'package:sist/src/pages/search_widget.dart';
 import 'map_widget.dart';
 
@@ -17,6 +20,7 @@ class _MainPageState extends State<MainPage> {
   List<Catalogo> catalogoElements = [];
   List<Producto> productoElements = [];
   List<Negocio> negocioElements = [];
+  MapScreen myMap = MapScreen();
 
   @override
   void initState() {
@@ -95,8 +99,7 @@ class _MainPageState extends State<MainPage> {
                         ],
                       ))),
               Expanded(
-                child: Container(
-                    alignment: Alignment.center, child: const MapScreen()),
+                child: Container(alignment: Alignment.center, child: myMap),
               ),
               Container(
                 alignment: Alignment.topRight,
@@ -108,7 +111,12 @@ class _MainPageState extends State<MainPage> {
                             showSearch(
                                 context: context,
                                 delegate: CustomSearchDelegate(
-                                    catalogoElements, "Buscar por catalogo"));
+                                    catalogoElements,
+                                    negocioElements,
+                                    productoElements,
+                                    "Buscar por catalogo",
+                                    myMap,
+                                    0));
                           },
                           icon: const Icon(
                             Icons.shopping_bag,
@@ -121,7 +129,12 @@ class _MainPageState extends State<MainPage> {
                             showSearch(
                                 context: context,
                                 delegate: CustomSearchDelegate(
-                                    negocioElements, "Buscar por tienda"));
+                                    negocioElements,
+                                    catalogoElements,
+                                    productoElements,
+                                    "Buscar por tienda",
+                                    myMap,
+                                    1));
                           },
                           icon: const Icon(
                             Icons.add_shopping_cart_sharp,
@@ -158,107 +171,5 @@ class _MainPageState extends State<MainPage> {
             ],
           ),
         ));
-  }
-}
-
-class Catalogo {
-  final String idCatalogo;
-  final String nombre;
-
-  Catalogo({
-    required this.idCatalogo,
-    required this.nombre,
-  });
-
-  factory Catalogo.fromJson(Map<String, dynamic> json) {
-    return Catalogo(
-      idCatalogo: json['IdCatalogo'] ?? '',
-      nombre: json['Nombre'] ?? '',
-    );
-  }
-}
-
-class Negocio {
-  final String idNegocio;
-  final String nombre;
-  final String sigla;
-  final String imagen;
-  final String direccion;
-  final String telefono;
-  final String mail;
-  final String paginaWeb;
-  final String longitud;
-  final String latitud;
-  final String idCenComercial;
-  final String nro;
-
-  Negocio({
-    required this.idNegocio,
-    required this.nombre,
-    required this.sigla,
-    required this.imagen,
-    required this.direccion,
-    required this.telefono,
-    required this.mail,
-    required this.paginaWeb,
-    required this.longitud,
-    required this.latitud,
-    required this.idCenComercial,
-    required this.nro,
-  });
-
-  factory Negocio.fromJson(Map<String, dynamic> json) {
-    return Negocio(
-      idNegocio: json['IdNegocio'] ?? '',
-      nombre: json['Nombre'] ?? '',
-      sigla: json['Sigla'] ?? '',
-      imagen: json['Imagen'] ?? '',
-      direccion: json['Direccion'] ?? '',
-      telefono: json['Telefono'] ?? '',
-      mail: json['Mail'] ?? '',
-      paginaWeb: json['Pagina Web'] ?? '',
-      longitud: json['Longitud'] ?? '',
-      latitud: json['Latitud'] ?? '',
-      idCenComercial: json['IdCenComercial'] ?? '',
-      nro: json['Nro'] ?? '',
-    );
-  }
-}
-
-class Producto {
-  final String idProducto;
-  final String nombre;
-  final String idCatalogo;
-  final String color;
-  final String precio;
-  final String cantidad;
-  final String fotos;
-  final String disponible;
-  final String idNegocio;
-
-  Producto({
-    required this.idProducto,
-    required this.nombre,
-    required this.idCatalogo,
-    required this.color,
-    required this.precio,
-    required this.cantidad,
-    required this.fotos,
-    required this.disponible,
-    required this.idNegocio,
-  });
-
-  factory Producto.fromJson(Map<String, dynamic> json) {
-    return Producto(
-      idProducto: json['IdPoducto'] ?? '',
-      nombre: json['Producto'] ?? '',
-      idCatalogo: json['IdCatalogo'] ?? '',
-      color: json['Color'] ?? '',
-      precio: json['Precio'] ?? '',
-      cantidad: json['Cantidad'] ?? '',
-      fotos: json['Fotos'] ?? '',
-      disponible: json['Dsponible'] ?? '',
-      idNegocio: json['IdNegocio'] ?? '',
-    );
   }
 }

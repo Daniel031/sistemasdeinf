@@ -2,19 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:convert';
 
-class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+import 'package:sist/src/classes/catalogo_classes.dart';
+import 'package:sist/src/classes/negocio_classes.dart';
+import 'package:sist/src/classes/producto_classes.dart';
+
+class MapEvent extends StatefulWidget {
+  final String idCatalogo;
+  final String idNegocio;
+  final int tipo; //0 catalogo 1 negocio
+  final List<Catalogo> listCatalogo;
+  final List<Negocio> negocio;
+  final List<Producto> producto;
+  const MapEvent(this.idCatalogo, this.idNegocio, this.listCatalogo,
+      this.negocio, this.producto, this.tipo);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _MapScreenState createState() => _MapScreenState();
+  // ignore: library_private_types_in_public_api, no_logic_in_create_state
+  _MapEventState createState() => _MapEventState(idCatalogo, idNegocio, tipo);
 }
 
-class _MapScreenState extends State<MapScreen> {
+class _MapEventState extends State<MapEvent> {
   late GoogleMapController mapController;
 
   final LatLng _center = const LatLng(-17.7911499296059, -63.2050266495182);
   Set<Polygon> polygons = Set();
+  String idCatalogo;
+  String idNegocio;
+  int tipo;
+
+  _MapEventState(this.idCatalogo, this.idNegocio, this.tipo);
 
   @override
   void initState() {
@@ -54,9 +70,10 @@ class _MapScreenState extends State<MapScreen> {
         polygons.add(polygon);
       });
     });
+    _modifyPoligons([""]);
   }
 
-  void modifyPoligons(List<dynamic> items) {
+  _modifyPoligons(List<dynamic> items) {
     setState(() {
       // Buscar el polígono con el polygonId deseado y realizar la modificación
       polygons = polygons.map((polygon) {
