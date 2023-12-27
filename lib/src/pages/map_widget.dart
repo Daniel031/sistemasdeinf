@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:convert';
-import 'dart:async';
-import 'package:flutter/services.dart' show rootBundle;
-import '../services/json_model.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -59,15 +56,6 @@ class _MapScreenState extends State<MapScreen> {
     });
 
     print(this.polygons);
-  }
-
-  Future<List<JsonModel>> cargarDatosDesdeJson() async {
-    final String jsonString = await rootBundle.loadString('assets/datos.json');
-    final List<dynamic> jsonList = json.decode(jsonString);
-
-    List<JsonModel> datos =
-        jsonList.map((json) => JsonModel.fromJson(json)).toList();
-    return datos;
   }
 
   @override

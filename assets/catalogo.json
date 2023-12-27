@@ -1,0 +1,34 @@
+﻿[
+    {
+        "IdCatalogo": "1",
+        "Nombre": "Dispositivos Moviles"
+    },
+    {
+        "IdCatalogo": "2",
+        "Nombre": "Componentes Adicionales"
+    },
+    {
+        "IdCatalogo": "3",
+        "Nombre": "Servidores y soluciones empresariales"
+    },
+    {
+        "IdCatalogo": "4",
+        "Nombre": "Gaming"
+    },
+    {
+        "IdCatalogo": "5",
+        "Nombre": "Repuestos y actualizaciones"
+    },
+    {
+        "IdCatalogo": "6",
+        "Nombre": "Camaras y accesorios"
+    },
+    {
+        "IdCatalogo": "7",
+        "Nombre": "Dispositivos de Entrada"
+    },
+    {
+        "IdCatalogo": "8",
+        "Nombre": "Dispositivos de realidad virtual"
+    }
+]
